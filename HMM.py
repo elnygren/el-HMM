@@ -4,14 +4,29 @@
 
 states = (u'α', u'β')
 
-def calculate_P(k, n, smoothing=True):
+'''
+Helper used to calculate probability and add-1 smoothing.
+'''
+
+def __calculate_P__(k, n, smoothing=True):
 	if not smoothing:
 		return 1.0 * k / n
 	else:
 		return 1.0 * (k+1) / (n + len(states))
 
+'''
+Calculates the start values' probabilities'. 
+Data should be in a dict 'hidden states': 'observations'
+
+data = {
+	 u"αββααββ": u"AAAHHHA"
+}
+'''
+
 def start_P(data):
 	start_vals = {}	
+
+	# Count all start values
 	for row in data:
 		key = row[0]
 		if key in start_vals:
@@ -19,16 +34,22 @@ def start_P(data):
 		else:
 			start_vals[key] = 1
 
+	# Probabilities
 	total = sum(start_vals.values())
-
 	for key in start_vals: 
-		start_vals[key] = calculate_P(start_vals[key], total, True)
+		start_vals[key] = __calculate_P__(start_vals[key], total)
 	
 	return start_vals
 
-# def transition_P(data):
 
+'''
+Calculates the emission probabilities. 
+Data should be in a dict 'hidden states': 'observations'. (same length)
 
+data = {
+	 u"αββααββ": u"AAAHHHA"
+}
+'''
 def emission_P(data, states):
 	
 	# Init count
@@ -49,13 +70,22 @@ def emission_P(data, states):
 			else:
 				counts[state][observed] = 1
 
+	# Calculate probabilities
 	for count in counts:
 		total = sum(counts[count].values())
 		for observed in counts[count]:
-			counts[count][observed] = calculate_P(counts[count][observed], total)
+			counts[count][observed] = __calculate_P__(counts[count][observed], total)
 
 	return counts
 
+'''
+Calculates the transition probabilities. 
+Data should be in a dict 'hidden states': 'observations'. (same length)
+
+data = {
+	 u"αββααββ": u"AAAHHHA"
+}
+'''
 def transition_P(data, states):
 	# Init count
 	counts = {}
@@ -80,7 +110,7 @@ def transition_P(data, states):
 	for count in counts:
 		total = sum(counts[count].values())
 		for observed in counts[count]:
-			counts[count][observed] = calculate_P(counts[count][observed], total)
+			counts[count][observed] = __calculate_P__(counts[count][observed], total)
 
 	return counts
 
