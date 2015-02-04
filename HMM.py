@@ -2,13 +2,11 @@
 # -*- coding: utf-8 -*-
 
 
-states = (u'α', u'β')
-
 '''
 Helper used to calculate probability and add-1 smoothing.
 '''
 
-def __calculate_P__(k, n, smoothing=True):
+def __calculate_P__(k, n, smoothing=True, states=[]):
 	if not smoothing:
 		return 1.0 * k / n
 	else:
@@ -23,7 +21,7 @@ data = {
 }
 '''
 
-def start_P(data):
+def start_P(data, states):
 	start_vals = {}	
 
 	# Count all start values
@@ -37,7 +35,7 @@ def start_P(data):
 	# Probabilities
 	total = sum(start_vals.values())
 	for key in start_vals: 
-		start_vals[key] = __calculate_P__(start_vals[key], total)
+		start_vals[key] = __calculate_P__(start_vals[key], total, states)
 	
 	return start_vals
 
@@ -74,7 +72,7 @@ def emission_P(data, states):
 	for count in counts:
 		total = sum(counts[count].values())
 		for observed in counts[count]:
-			counts[count][observed] = __calculate_P__(counts[count][observed], total)
+			counts[count][observed] = __calculate_P__(counts[count][observed], total, states)
 
 	return counts
 
@@ -110,7 +108,7 @@ def transition_P(data, states):
 	for count in counts:
 		total = sum(counts[count].values())
 		for observed in counts[count]:
-			counts[count][observed] = __calculate_P__(counts[count][observed], total)
+			counts[count][observed] = __calculate_P__(counts[count][observed], total, states)
 
 	return counts
 

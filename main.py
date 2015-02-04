@@ -16,7 +16,7 @@ dna = {
 states = (u'α', u'β')
 observations = ('A', 'H', 'H', 'A', 'A')
  
-start_probability = HMM.start_P(dna)
+start_probability = HMM.start_P(dna, states)
 transition_probability = HMM.transition_P(dna, states)
 emission_probability = HMM.emission_P(dna, states)
 
@@ -34,7 +34,7 @@ viterbi = Viterbi.viterbi(observations,
                    transition_probability,
                    emission_probability)
 
-print 'Probabilities'
+print 'Probabilities:'
 print start_probability
 print transition_probability
 print emission_probability
